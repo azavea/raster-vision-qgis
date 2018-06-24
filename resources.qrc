@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/plugins/raster_vision_qgis" >
+        <file>icon-experiment.png</file>
+        <file>icon-predict.png</file>
+        <file>icon-profiles.png</file>
+        <file>icon-configure.png</file>
+        <file>info.png</file>
+    </qresource>
+</RCC>
