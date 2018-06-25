@@ -62,6 +62,7 @@ class ExperimentDialogController(object):
         profiles = settings.get_style_profiles()
         profiles.insert(0, StyleProfile.EMPTY())
         profile_names = list(map(lambda p: p.name, profiles))
+        self.dlg.style_profile_combobox.clear()
         self.dlg.style_profile_combobox.addItems(profile_names)
         settings_profile = settings.get_experiment_profile()
         if settings_profile in profile_names:

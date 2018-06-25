@@ -35,8 +35,13 @@ class ExperimentFiles:
         # Parse workflow information
         for section, (uri_set, has_ground_truth, has_predictions) in by_section.items():
             if section in workflow:
+                scene_count = 0
                 for scene in workflow[section]:
-                    id = scene['id']
+                    if 'id' in scene:
+                        id = scene['id']
+                    else:
+                        id = "{}_{}".format(section, scene_count)
+                    scene_count += 1
                     raster_uris = scene['raster_source']['geotiff_files']['uris']
                     raster_uris = [uri.format(rv_root=rv_root) for uri in raster_uris]
 

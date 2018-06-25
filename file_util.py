@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 
 from urllib.parse import urlparse
 
+from .log import Log
+
 class UnsupportedException(Exception):
     pass
 
@@ -34,6 +36,9 @@ def get_local_path(uri, working_dir, profile_name=None):
     parsed_uri = urlparse(uri)
     if parsed_uri.scheme == '':
         path = uri
+        if not os.path.exists(path):
+            Log.log_warning("File Util: File does not exists - {}".format(path))
+            return None
     elif parsed_uri.scheme == 's3':
         import botocore
 
@@ -49,6 +54,7 @@ def get_local_path(uri, working_dir, profile_name=None):
             try:
                 s3.download_file(bucket, key, path)
             except botocore.exceptions.ClientError as e:
+                Log.log_warning("File Util: Could not read of {}. {}".format(uri, e))
                 return None
                 # raise S3Exception("Could not read of {}".format(uri)) from e
 
@@ -65,6 +71,7 @@ def get_local_path(uri, working_dir, profile_name=None):
             except botocore.exceptions.ClientError as e:
                 # TODO: Is this right?
                 # raise S3Exception("Could not read of {}".format(uri)) from e
+                Log.log_warning("File Util: Could not read HEAD data for existing: {}. {}".format(uri, e))
                 return None
         else:
             local_dir = os.path.dirname(path)

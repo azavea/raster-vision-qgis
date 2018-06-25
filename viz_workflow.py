@@ -131,6 +131,7 @@ class VizWorkflow(object):
             layer.loadSldStyle(sld)
 
     def viz_scenes(self, workflow, experiment_files):
+        class_items = experiment_files.class_items
         errors = False
 
         # Training Data
@@ -155,9 +156,9 @@ class VizWorkflow(object):
                     Log.log_warning("Training Scenes do not exist in this workflow.")
 
             if self.options.training_labels:
-                gt_label_uri = scene_data.ground_truth_label_uri
-                if gt_label_uri:
-                    gt_labels_path = self.get_local_path(gt_label_uri)
+                gt_labels_uri = scene_data.ground_truth_label_uri
+                if gt_labels_uri:
+                    gt_labels_path = self.get_local_path(gt_labels_uri)
                     if gt_labels_path:
                         gt_layer = self.iface.addVectorLayer(
                             gt_labels_path, 'training-ground-truth-' + id, 'ogr')
@@ -169,7 +170,7 @@ class VizWorkflow(object):
                             gt_layer.setRenderer(renderer)
                     else:
                         errors = True
-                        Log.log_warning("Cannot load GeoJSON at {}".format(gt_label_uri))
+                        Log.log_warning("Cannot load GeoJSON at {}".format(gt_labels_uri))
                 else:
                     errors = True
                     Log.log_warning("Training Labels do not exist in this workflow.")
@@ -196,9 +197,9 @@ class VizWorkflow(object):
 
 
             if self.options.validation_labels:
-                gt_label_uri = scene_data.ground_truth_label_uri
-                if gt_label_uri:
-                    gt_labels_path = self.get_local_path(gt_label_uri)
+                gt_labels_uri = scene_data.ground_truth_label_uri
+                if gt_labels_uri:
+                    gt_labels_path = self.get_local_path(gt_labels_uri)
                     if gt_labels_path:
                         gt_layer = self.iface.addVectorLayer(
                             gt_labels_path, 'valiation-ground-truth-' + id, 'ogr')
@@ -210,7 +211,7 @@ class VizWorkflow(object):
                             gt_layer.setRenderer(renderer)
                     else:
                         errors = True
-                        Log.log_warning("Cannot load GeoJSON at {}".format(gt_label_uri))
+                        Log.log_warning("Cannot load GeoJSON at {}".format(gt_labels_uri))
                 else:
                     errors = True
                     Log.log_warning("Validation Labels do not exist in this workflow.")
