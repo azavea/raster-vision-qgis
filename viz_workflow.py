@@ -69,7 +69,7 @@ class VizWorkflow(object):
         return get_local_path(uri, self.working_dir, self.aws_profile)
 
     def show(self):
-        self.viz_workflow()
+        return self.viz_workflow()
 
     def load_json(self, uri):
         path = self.get_local_path(uri)
@@ -77,7 +77,7 @@ class VizWorkflow(object):
             with open(path, 'r') as f:
                 return json.load(f)
         else:
-            raise Exception("Could not load {}".format(uri))
+            None
 
     def make_vector_renderer(self, layer, class_field, class_items):
         category_map = {}
@@ -120,8 +120,9 @@ class VizWorkflow(object):
             QgsProject.instance().removeMapLayer(layer_id)
 
     def dump_eval(self, eval_uri):
-        eval = self.load_json(eval_uri)
-        Log.log_info(json.dumps(eval, indent=2))
+        eval_data = self.load_json(eval_uri)
+        if eval_data:
+            Log.log_info(json.dumps(eval_data, indent=2))
 
     def add_raster_layer(self, layer_name, path, sld=None):
         raster_layer = self.iface.addRasterLayer(path, layer_name)
@@ -130,21 +131,28 @@ class VizWorkflow(object):
             layer.loadSldStyle(sld)
 
     def viz_scenes(self, workflow, experiment_files):
+        errors = False
+
         # Training Data
         for id, scene_data in experiment_files.training_set.items():
             if self.options.training_scenes:
-                for raster_uri in scene_data.raster_uris:
-                    raster_path = self.get_local_path(raster_uri)
-                    if raster_path:
-                        fname = os.path.splitext(os.path.basename(raster_path))[0]
-                        layer_name = "training-scene-{}_{}".format(fname, id)
-                        sld = None
-                        if self.style_profile and self.style_profile.validation_scenes_sld:
-                            sld = style_profile.validation_scenes_sld
+                if scene_data.raster_uris:
+                    for raster_uri in scene_data.raster_uris:
+                        raster_path = self.get_local_path(raster_uri)
+                        if raster_path:
+                            fname = os.path.splitext(os.path.basename(raster_path))[0]
+                            layer_name = "training-scene-{}_{}".format(fname, id)
+                            sld = None
+                            if self.style_profile and self.style_profile.validation_scenes_sld:
+                                sld = style_profile.validation_scenes_sld
 
-                        self.add_raster_layer(layer_name, raster_path, sld)
-                    else:
-                        Log.log_warning("Cannot load raster at {}".format(raster_uri))
+                            self.add_raster_layer(layer_name, raster_path, sld)
+                        else:
+                            errors = True
+                            Log.log_warning("Cannot load raster at {}".format(raster_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Training Scenes do not exist in this workflow.")
 
             if self.options.training_labels:
                 gt_label_uri = scene_data.ground_truth_label_uri
@@ -160,23 +168,32 @@ class VizWorkflow(object):
                             renderer = self.make_vector_renderer(gt_layer, class_field, class_items)
                             gt_layer.setRenderer(renderer)
                     else:
+                        errors = True
                         Log.log_warning("Cannot load GeoJSON at {}".format(gt_label_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Training Labels do not exist in this workflow.")
 
         # Valdation Data
         for id, scene_data in experiment_files.validation_set.items():
             if self.options.validation_scenes:
-                for raster_uri in scene_data.raster_uris:
-                    raster_path = self.get_local_path(raster_uri)
-                    if raster_path:
-                        fname = os.path.splitext(os.path.basename(raster_path))[0]
-                        layer_name = "validation-scene-{}_{}".format(fname, id)
-                        sld = None
-                        if self.style_profile and self.style_profile.validation_scenes_sld:
-                            sld = style_profile.validation_scenes_sld
+                if scene_data.raster_uris:
+                    for raster_uri in scene_data.raster_uris:
+                        raster_path = self.get_local_path(raster_uri)
+                        if raster_path:
+                            fname = os.path.splitext(os.path.basename(raster_path))[0]
+                            layer_name = "validation-scene-{}_{}".format(fname, id)
+                            sld = None
+                            if self.style_profile and self.style_profile.validation_scenes_sld:
+                                sld = style_profile.validation_scenes_sld
 
-                        self.add_raster_layer(layer_name, raster_path, sld)
-                    else:
-                        Log.log_warning("Cannot load raster at {}".format(raster_uri))
+                            self.add_raster_layer(layer_name, raster_path, sld)
+                        else:
+                            Log.log_warning("Cannot load raster at {}".format(raster_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Validation Scenes do not exist in this workflow.")
+
 
             if self.options.validation_labels:
                 gt_label_uri = scene_data.ground_truth_label_uri
@@ -192,7 +209,11 @@ class VizWorkflow(object):
                             renderer = self.make_vector_renderer(gt_layer, class_field, class_items)
                             gt_layer.setRenderer(renderer)
                     else:
+                        errors = True
                         Log.log_warning("Cannot load GeoJSON at {}".format(gt_label_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Validation Labels do not exist in this workflow.")
 
             if self.options.validation_predictions:
                 pr_label_uri = scene_data.prediction_uri
@@ -208,24 +229,32 @@ class VizWorkflow(object):
                             renderer = self.make_vector_renderer(gt_layer, class_field, class_items)
                             pr_layer.setRenderer(renderer)
                     else:
+                        errors = True
                         Log.log_warning("Cannot load GeoJSON at {}".format(pr_label_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Validation Predictions do not exist in this workflow.")
 
 
         # Prediction Data
         for id, scene_data in experiment_files.prediction_set.items():
             if self.options.prediction_scenes:
-                for raster_uri in scene_data.raster_uris:
-                    raster_path = self.get_local_path(raster_uri)
-                    if raster_path:
-                        fname = os.path.splitext(os.path.basename(raster_path))[0]
-                        layer_name = "prediction-scene-{}_{}".format(fname, id)
-                        sld = None
-                        if self.style_profile and self.style_profile.prediction_scenes_sld:
-                            sld = style_profile.prediction_scenes_sld
+                if scene_data.raster_uris:
+                    for raster_uri in scene_data.raster_uris:
+                        raster_path = self.get_local_path(raster_uri)
+                        if raster_path:
+                            fname = os.path.splitext(os.path.basename(raster_path))[0]
+                            layer_name = "prediction-scene-{}_{}".format(fname, id)
+                            sld = None
+                            if self.style_profile and self.style_profile.prediction_scenes_sld:
+                                sld = style_profile.prediction_scenes_sld
 
-                        self.add_raster_layer(layer_name, raster_path, sld)
-                    else:
-                        Log.log_warning("Cannot load raster at {}".format(raster_uri))
+                            self.add_raster_layer(layer_name, raster_path, sld)
+                        else:
+                            Log.log_warning("Cannot load raster at {}".format(raster_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Prediction Scenes do not exist in this workflow.")
 
             if self.options.prediction_predictions:
                 pr_label_uri = scene_data.prediction_uri
@@ -241,78 +270,24 @@ class VizWorkflow(object):
                             renderer = self.make_vector_renderer(gt_layer, class_field, class_items)
                             pr_layer.setRenderer(renderer)
                     else:
+                        errors = True
                         Log.log_warning("Cannot load GeoJSON at {}".format(pr_label_uri))
+                else:
+                    errors = True
+                    Log.log_warning("Predictions do not exist in this workflow.")
 
-        # # Validation Data
-        # if self.options.validation_scenes:
-        #     pass
+        self.iface.zoomToActiveLayer()
 
-        # if self.options.validation_labels:
-        #     pass
-
-        # if self.options.validation_predictions:
-        #     pass
-
-        # # Prediction Data
-        # if self.options.prediction_scenes:
-        #     pass
-
-        # if self.options.predictions:
-        #     pass
-
-
-        # for scene in workflow['test_scenes']:
-        #     id = scene['id']
-        #     is_classification = workflow['machine_learning']['task'] == 'CLASSIFICATION'
-        #     key = 'classification_geojson_file' \
-        #         if is_classification else 'object_detection_geojson_file'
-        #     class_items = workflow['machine_learning']['class_items']
-
-        #     raster_uris = scene['raster_source']['geotiff_files']['uris']
-        #     raster_uris = [uri.format(rv_root=self.rv_root) for uri in raster_uris]
-        #     for raster_uri in raster_uris:
-        #         raster_path = self.get_local_path(raster_uri)
-        #         fname = os.path.splitext(os.path.basename(raster_path))[0]
-        #         layer_name = "validation-scene-{}_{}".format(fname, id)
-        #         sld = None
-        #         if self.style_profile and self.style_profile.validation_scenes_sld:
-        #             sld = style_profile.validation_scenes_sld
-
-        #         self.add_raster_layer(layer_name, raster_path, sld)
-
-        #     gt_labels_uri = (
-        #         scene['ground_truth_label_store'][key]
-        #         ['uri'].format(rv_root=self.rv_root))
-        #     gt_labels_path = self.get_local_path(gt_labels_uri)
-        #     if gt_labels_path:
-        #         gt_layer = self.iface.addVectorLayer(
-        #             gt_labels_path, 'validation-ground-truth-' + id, 'ogr')
-        #         if self.style_profile and self.style_profile.validation_labels_sld:
-        #             gt_layer.loadSldStyle(self.style_profile.validation_labels_sld)
-        #         else:
-        #             class_field = self.get_class_field(gt_labels_uri)
-        #             renderer = self.make_vector_renderer(gt_layer, class_field, class_items)
-        #             gt_layer.setRenderer(renderer)
-
-        #     prediction_labels_uri = os.path.join(
-        #         self.rv_root, 'rv-output', 'raw-datasets', workflow['raw_dataset_key'],
-        #         'datasets', workflow['dataset_key'], 'models', workflow['model_key'],
-        #         'predictions', workflow['prediction_key'], 'output', id + '.json')
-        #     prediction_labels_path = self.get_local_path(prediction_labels_uri)
-        #     if prediction_labels_path:
-        #         pred_layer = self.iface.addVectorLayer(
-        #             prediction_labels_path, 'validation-predictions-' + id, 'ogr')
-        #         if self.style_profile and self.style_profile.validation_predictions_sld:
-        #             pred_layer.loadSldStyle(self.style_profile.validation_predictions_sld)
-        #         else:
-        #             class_field = self.get_class_field(prediction_labels_path)
-        #             renderer = self.make_vector_renderer(pred_layer, class_field, class_items, is_pred=True)
-        #             pred_layer.setRenderer(renderer)
+        return errors
 
     def viz_workflow(self):
         self.clear_layers()
 
         workflow = self.load_json(self.workflow_path)
+        if not workflow:
+            Log.log_error("Cannot load workflow at {}".format(self.workflow_path))
+            return True
+
         experiment_files = ExperimentFiles.from_workflow_config(workflow, self.rv_root)
 
         eval_uri = os.path.join(
@@ -323,4 +298,4 @@ class VizWorkflow(object):
 
         self.dump_eval(eval_uri)
 
-        self.viz_scenes(workflow, experiment_files)
+        return self.viz_scenes(workflow, experiment_files)

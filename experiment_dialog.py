@@ -15,6 +15,8 @@ import os
 from PyQt5 import uic
 from PyQt5 import QtWidgets
 
+from qgis.core import Qgis
+
 from .experiment_info_dialog import ExperimentInfoDialog
 from .settings import Settings, StyleProfile
 from .viz_workflow import VizWorkflow, ExperimentLoadOptions
@@ -44,6 +46,10 @@ class ExperimentDialogController(object):
     def __init__(self, iface):
         self.dlg = ExperimentDialog()
         self.iface = iface
+
+    def showLogs(self):
+        # TODO
+        pass
 
     def run(self):
         self.dlg.show()
@@ -107,4 +113,13 @@ class ExperimentDialogController(object):
                             options)
 
             # Load RV Layers
-            v.show()
+            errors = v.show()
+
+            if errors:
+                msg = "Some Files Not Loaded. Check Logs for details."
+                widget = self.iface.messageBar().createMessage("Raster Vision", msg)
+                # button = QtWidgets.QPushButton(widget)
+                # button.setText("View Logs.")
+                # button.pressed.connect(self.showLogs)
+                # widget.layout().addWidget(button)
+                self.iface.messageBar().pushWidget(widget, Qgis.Warning)
