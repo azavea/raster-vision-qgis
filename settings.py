@@ -123,7 +123,7 @@ class Settings(object):
 
     # Style profiles index
     def get_style_profiles_index(self):
-        return self.settings.value('profiles/index', 0)
+        return self.settings.value('profiles/index', 0, int)
 
     def set_style_profiles_index(self, v):
         self.settings.setValue('profiles/index', v)

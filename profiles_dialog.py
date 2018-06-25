@@ -119,12 +119,12 @@ class ProfilesDialogController(object):
         self.profiles = settings.get_style_profiles()
 
         # Block signals while loading the combobox
-        oldState = self.dlg.profiles_combobox.blockSignals(True)
+        old_state = self.dlg.profiles_combobox.blockSignals(True)
         self.dlg.profiles_combobox.clear()
         self.dlg.profiles_combobox.addItems(map(lambda p: p.name, self.profiles))
         self.dlg.profiles_combobox.setCurrentIndex(self.current_profile_index)
         self.update_ui_for_profile(self.current_profile_index)
-        self.dlg.profiles_combobox.blockSignals(True)
+        self.dlg.profiles_combobox.blockSignals(old_state)
 
         result = self.dlg.exec_()
 

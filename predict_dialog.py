@@ -16,6 +16,7 @@ from PyQt5 import uic
 from PyQt5 import QtWidgets
 
 from .predict_info_dialog import PredictInfoDialog
+from .raster_util import get_raster_layers
 from .settings import Settings, StyleProfile
 from .viz_workflow import VizWorkflow
 
@@ -51,6 +52,7 @@ class PredictDialogController(object):
 
         self.dlg.model_file_edit.setText(settings.get_model_file())
 
+        self.dlg.style_profile_combobox.clear()
         profiles = settings.get_style_profiles()
         profiles.insert(0, StyleProfile.EMPTY())
         profile_names = list(map(lambda p: p.name, profiles))
@@ -60,6 +62,12 @@ class PredictDialogController(object):
             self.dlg.style_profile_combobox.setCurrentIndex(profile_names.index(settings_profile))
         else:
             self.dlg.style_profile_combobox.setCurrentIndex(0)
+
+        # Load all raster layers
+        self.dlg.input_layer_combobox.clear()
+        raster_layers = get_raster_layers()
+        for name in raster_layers:
+            self.dlg.input_layer_combobox.addItem(name)
 
         result = self.dlg.exec_()
 

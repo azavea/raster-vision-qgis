@@ -21,7 +21,7 @@ def export_raster_layer(layer, path):
 def get_raster_layers():
     project = QgsProject.instance()
     raster_layers = { }
-    for name, layer in project.mapLayers().items():
+    for layer in project.mapLayers().values():
         if type(layer) is QgsRasterLayer:
-            raster_layers[name] = layer
+            raster_layers[layer.name()] = layer
     return raster_layers
