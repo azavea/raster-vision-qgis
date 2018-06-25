@@ -37,6 +37,27 @@ class ProfilesDialog(QtWidgets.QDialog, FORM_CLASS):
         self.add_profile_button.clicked.connect(self.add_profile_clicked)
         self.profiles_combobox.currentIndexChanged.connect(self.profiles_index_changed)
 
+        def connect_file_button(button, edit):
+            def set_edit():
+                path = QtWidgets.QFileDialog.getOpenFileName()
+                if path:
+                    edit.setText(path[0])
+            button.clicked.connect(set_edit)
+
+        connect_file_button(self.training_scenes_button,
+                            self.training_scenes_edit.setText)
+        connect_file_button(self.training_labels_button,
+                            self.training_labels_edit)
+        connect_file_button(self.validation_scenes_button,
+                            self.validation_scenes_edit)
+        connect_file_button(self.validation_labels_button,
+                            self.validation_labels_edit)
+        connect_file_button(self.validation_predictions_button,
+                            self.validation_predictions_edit)
+        connect_file_button(self.prediction_scenes_button,
+                            self.prediction_scenes_edit)
+        connect_file_button(self.predictions_button,
+                            self.predictions_edit)
 
     def show_info(self):
         self.info_dialog.show()

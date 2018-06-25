@@ -52,14 +52,14 @@ class VizWorkflow(object):
     def __init__(self,
                  iface,
                  rv_root,
-                 workflow_path,
+                 workflow_uri,
                  working_dir,
                  aws_profile,
                  style_profile,
                  options):
         self.iface = iface
         self.rv_root = rv_root
-        self.workflow_path = workflow_path
+        self.workflow_uri = workflow_uri
         self.working_dir = working_dir
         self.aws_profile = aws_profile
         self.style_profile = style_profile
@@ -284,10 +284,12 @@ class VizWorkflow(object):
     def viz_workflow(self):
         self.clear_layers()
 
-        workflow = self.load_json(self.workflow_path)
+        workflow = self.load_json(self.workflow_uri)
         if not workflow:
-            Log.log_error("Cannot load workflow at {}".format(self.workflow_path))
+            Log.log_error("Cannot load workflow at {}".format(self.workflow_uri))
             return True
+
+        Log.log_info("Loading experiment form workflow at {}".format(self.workflow_uri))
 
         experiment_files = ExperimentFiles.from_workflow_config(workflow, self.rv_root)
 

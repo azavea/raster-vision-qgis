@@ -30,7 +30,9 @@ class ConfigDialog(QtWidgets.QDialog, FORM_CLASS):
         self.working_dir_file_select_button.clicked.connect(self.select_working_dir)
 
     def select_working_dir(self):
-        self.working_dir_edit.setText(QtWidgets.QFileDialog.getExistingDirectory())
+        path = QtWidgets.QFileDialog.getExistingDirectory()
+        if path:
+            self.working_dir_edit.setText(path)
 
 
 class ConfigDialogController(object):
