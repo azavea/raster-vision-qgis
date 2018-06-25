@@ -17,7 +17,7 @@ from PyQt5 import QtWidgets
 
 from .experiment_info_dialog import ExperimentInfoDialog
 from .settings import Settings, StyleProfile
-from .viz_workflow import VizWorkflow
+from .viz_workflow import VizWorkflow, ExperimentLoadOptions
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -63,6 +63,15 @@ class ExperimentDialogController(object):
         else:
             self.dlg.style_profile_combobox.setCurrentIndex(0)
 
+        options = settings.get_experiment_load_options()
+        self.dlg.training_scenes_checkbox.setChecked(options.training_scenes)
+        self.dlg.training_labels_checkbox.setChecked(options.training_labels)
+        self.dlg.validation_scenes_checkbox.setChecked(options.validation_scenes)
+        self.dlg.validation_labels_checkbox.setChecked(options.validation_labels)
+        self.dlg.validation_predictions_checkbox.setChecked(options.validation_predictions)
+        self.dlg.prediction_scenes_checkbox.setChecked(options.prediction_scenes)
+        self.dlg.predictions_checkbox.setChecked(options.predictions)
+
         result = self.dlg.exec_()
 
         if result:
@@ -79,13 +88,23 @@ class ExperimentDialogController(object):
             if not style_profile_index == 0:
                 style_profile = profiles[style_profile_index]
 
+            options = ExperimentLoadOptions(self.dlg.training_scenes_checkbox.isChecked(),
+                                            self.dlg.training_labels_checkbox.isChecked(),
+                                            self.dlg.validation_scenes_checkbox.isChecked(),
+                                            self.dlg.validation_labels_checkbox.isChecked(),
+                                            self.dlg.validation_predictions_checkbox.isChecked(),
+                                            self.dlg.prediction_scenes_checkbox.isChecked(),
+                                            self.dlg.predictions_checkbox.isChecked())
+            settings.set_experiment_load_options(options)
+
 
             v = VizWorkflow(self.iface,
                             rv_root,
                             workflow_uri,
                             settings.get_working_dir(),
                             settings.get_aws_profile(),
-                            style_profile)
+                            style_profile,
+                            options)
 
             # Load RV Layers
             v.show()

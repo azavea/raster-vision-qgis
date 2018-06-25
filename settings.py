@@ -3,6 +3,8 @@ import json
 
 from PyQt5.QtCore import QSettings
 
+from .viz_workflow import ExperimentLoadOptions
+
 class InfoUrls:
     def __init__(self):
         self.experiment = "http://github.com/azavea/raster-vision"
@@ -60,6 +62,8 @@ class Settings(object):
             os.makedirs(d)
         return d
 
+    ### Load Experiment
+
     # Raster Vision Root
     def get_rv_root(self):
         return self.settings.value("experiment/rv_root", "")
@@ -81,6 +85,19 @@ class Settings(object):
     def set_experiment_profile(self, v):
         self.settings.setValue('experiment/profile', v)
 
+    # Experiment load options
+    def get_experiment_load_options(self):
+        s = self.settings.value("experiment/experiment_load_options")
+        if s:
+            return ExperimentLoadOptions.from_json(json.loads(s))
+        else:
+            return ExperimentLoadOptions()
+
+    def set_experiment_load_options(self, v):
+        self.settings.setValue("experiment/experiment_load_options", json.dumps(v.to_json()))
+
+    ### Predict
+
     # Raster Vision Model File
     def get_model_file(self):
         return self.settings.value("predict/model_file", "")
@@ -95,6 +112,8 @@ class Settings(object):
     def set_predict_profile(self, v):
         self.settings.setValue('predict/profile', v)
 
+    ### Style Profiles
+
     # Style profiles
     def get_style_profiles(self):
         return list(map(StyleProfile.from_json_str, self.settings.value('profiles/profile_list', [], str)))
@@ -108,6 +127,8 @@ class Settings(object):
 
     def set_style_profiles_index(self, v):
         self.settings.setValue('profiles/index', v)
+
+    ### Configuration
 
     # Working Directory
     def get_working_dir(self):

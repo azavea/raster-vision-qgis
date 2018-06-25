@@ -22,17 +22,12 @@ from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
 
-from qgis.core import QgsMessageLog
-
 from .resources import * # Initialize Qt resources from file resources.py
 
 from .experiment_dialog import ExperimentDialogController
 from .predict_dialog import PredictDialogController
 from .profiles_dialog import ProfilesDialogController
 from .config_dialog import ConfigDialogController
-
-def log(cls, msg):
-    QgsMessageLog.logMessage(msg, "Raster Vision")
 
 class RasterVision:
     """Main entry point for the Raster Vision QGIS Plugin."""

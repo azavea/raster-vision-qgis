@@ -154,7 +154,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="validation_predictions_checkbox">
     <property name="geometry">
      <rect>
       <x>200</x>
