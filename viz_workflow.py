@@ -217,9 +217,9 @@ class VizWorkflow(object):
                     Log.log_warning("Validation Labels do not exist in this workflow.")
 
             if self.options.validation_predictions:
-                pr_label_uri = scene_data.prediction_uri
-                if pr_label_uri:
-                    pr_labels_path = self.get_local_path(pr_label_uri)
+                pr_labels_uri = scene_data.prediction_uri
+                if pr_labels_uri:
+                    pr_labels_path = self.get_local_path(pr_labels_uri)
                     if pr_labels_path:
                         pr_layer = self.iface.addVectorLayer(
                             pr_labels_path, 'validation-predictions-' + id, 'ogr')
@@ -231,7 +231,7 @@ class VizWorkflow(object):
                             pr_layer.setRenderer(renderer)
                     else:
                         errors = True
-                        Log.log_warning("Cannot load GeoJSON at {}".format(pr_label_uri))
+                        Log.log_warning("Cannot load GeoJSON at {}".format(pr_labels_uri))
                 else:
                     errors = True
                     Log.log_warning("Validation Predictions do not exist in this workflow.")
@@ -257,10 +257,10 @@ class VizWorkflow(object):
                     errors = True
                     Log.log_warning("Prediction Scenes do not exist in this workflow.")
 
-            if self.options.prediction_predictions:
-                pr_label_uri = scene_data.prediction_uri
-                if pr_label_uri:
-                    pr_labels_path = self.get_local_path(pr_label_uri)
+            if self.options.predictions:
+                pr_labels_uri = scene_data.prediction_uri
+                if pr_labels_uri:
+                    pr_labels_path = self.get_local_path(pr_labels_uri)
                     if pr_labels_path:
                         pr_layer = self.iface.addVectorLayer(
                             pr_labels_path, 'predictions-' + id, 'ogr')
@@ -272,7 +272,7 @@ class VizWorkflow(object):
                             pr_layer.setRenderer(renderer)
                     else:
                         errors = True
-                        Log.log_warning("Cannot load GeoJSON at {}".format(pr_label_uri))
+                        Log.log_warning("Cannot load GeoJSON at {}".format(pr_labels_uri))
                 else:
                     errors = True
                     Log.log_warning("Predictions do not exist in this workflow.")
