@@ -9,7 +9,7 @@ Table of Contents:
 - [Prediction](#prediction)
 - [Style Profiles](#prediction)
 - [Configuration](#prediction)
-- [Tutorial: View SpaceNet Building Chip Classification](#loading-results-tutorial)
+- [Tutorial: View SpaceNet Building Chip Classification](#tutorial-view-spacenet-building-chip-classification)
 - [Developing](#developing)
 
 
