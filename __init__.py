@@ -27,5 +27,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
-    from .raster_vision import RasterVision
-    return RasterVision(iface)
+    from .raster_vision import RasterVisionPlugin
+    return RasterVisionPlugin(iface)

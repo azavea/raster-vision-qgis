@@ -54,5 +54,4 @@ class ConfigDialogController(object):
             settings.set_working_dir(self.dlg.working_dir_edit.text())
 
             aws_profile = self.dlg.aws_profile_edit.text()
-            if aws_profile:
-                settings.set_aws_profile(aws_profile)
+            settings.set_aws_profile(aws_profile)

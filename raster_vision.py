@@ -24,12 +24,13 @@ from PyQt5.QtWidgets import QAction
 
 from .resources import * # Initialize Qt resources from file resources.py
 
+from .registry import Registry
 from .experiment_dialog import ExperimentDialogController
 from .predict_dialog import PredictDialogController
 from .profiles_dialog import ProfilesDialogController
 from .config_dialog import ConfigDialogController
 
-class RasterVision:
+class RasterVisionPlugin:
     """Main entry point for the Raster Vision QGIS Plugin."""
 
     def __init__(self, iface):
@@ -50,7 +51,7 @@ class RasterVision:
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
-            'RasterVision_{}.qm'.format(locale))
+            'RasterVisionPlugin_{}.qm'.format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -69,8 +70,8 @@ class RasterVision:
         self.actions = []
         self.menu = self.tr(u'&Raster Vision')
         # TODO: We are going to let the user set this up in a future iteration
-        self.toolbar = self.iface.addToolBar(u'RasterVision')
-        self.toolbar.setObjectName(u'RasterVision')
+        self.toolbar = self.iface.addToolBar(u'RasterVisionPlugin')
+        self.toolbar.setObjectName(u'RasterVisionPlugin')
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -85,7 +86,7 @@ class RasterVision:
         :rtype: QString
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
-        return QCoreApplication.translate('RasterVision', message)
+        return QCoreApplication.translate('RasterVisionPlugin', message)
 
     def add_action(
         self,

@@ -14,8 +14,12 @@ from PyQt5.QtGui import QColor
 from qgis.core import *
 
 from .experiment_files import ExperimentFiles
-from .file_util import get_local_path
+#from .file_util import get_local_path
 from .log import Log
+
+import rastervision as rv
+from rastervision.protos.experiment_pb2 import ExperimentConfig as ExperimentConfigMsg
+#from rastervision.utils.files import file_to_json
 
 class ExperimentLoadOptions:
     def __init__(self, training_scenes=True, training_labels=True,
@@ -51,17 +55,13 @@ class ExperimentLoadOptions:
 class VizWorkflow(object):
     def __init__(self,
                  iface,
-                 rv_root,
-                 workflow_uri,
+                 experiment_uri,
                  working_dir,
                  aws_profile,
                  style_profile,
                  options):
         self.iface = iface
-        self.rv_root = rv_root
-        self.workflow_uri = workflow_uri
-        self.working_dir = working_dir
-        self.aws_profile = aws_profile
+        self.experiment_uri = experiment_uri
         self.style_profile = style_profile
         self.options = options
 
@@ -284,21 +284,16 @@ class VizWorkflow(object):
     def viz_workflow(self):
         self.clear_layers()
 
-        workflow = self.load_json(self.workflow_uri)
-        if not workflow:
-            Log.log_error("Cannot load workflow at {}".format(self.workflow_uri))
-            return True
+        msg = file_to_json(self.experiment_uri, ExperimentConfigMsg())
+        self.experiment = rv.ExperimentConfig.from_proto(msg)
+        Log.log_info("Loading experiment at {}".format(self.experiment_uri))
 
-        Log.log_info("Loading experiment form workflow at {}".format(self.workflow_uri))
+        experiment_files = ExperimentFiles.from_experiment(self.experiment)
 
-        experiment_files = ExperimentFiles.from_workflow_config(workflow, self.rv_root)
-
-        eval_uri = os.path.join(
-            self.rv_root, 'rv-output', 'raw-datasets', workflow['raw_dataset_key'],
-            'datasets', workflow['dataset_key'], 'models', workflow['model_key'],
-            'predictions', workflow['prediction_key'], 'evals',
-            workflow['eval_key'], 'output', 'eval.json')
-
-        self.dump_eval(eval_uri)
+        # Dump any evaluatoions into the log if they exist
+        for evaluator in experiment.evaluators:
+            if hasattr(evaluator, "output_uri"):
+                Log.log_info("Evaluation: {}".format(evaluator.evaluator_type))
+                self.dump_eval(evaluator.output_uri)
 
         return self.viz_scenes(workflow, experiment_files)

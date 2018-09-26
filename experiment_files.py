@@ -15,7 +15,7 @@ class ExperimentFiles:
 
 
     @classmethod
-    def from_workflow_config(cls, workflow, rv_root):
+    def from_experiment(cls, experiment):
         # TODO: Make this more generic, so adding other tasks is easy
         is_classification = workflow['machine_learning']['task'] == 'CLASSIFICATION'
         class_items = workflow['machine_learning']['class_items']

@@ -31,9 +31,6 @@ class ProfilesDialog(QtWidgets.QDialog, FORM_CLASS):
 
         self.setupUi(self)
 
-        self.info_button.clicked.connect(self.show_info)
-        self.info_dialog = ProfilesInfoDialog()
-
         self.add_profile_button.clicked.connect(self.add_profile_clicked)
         self.profiles_combobox.currentIndexChanged.connect(self.profiles_index_changed)
 
@@ -44,24 +41,14 @@ class ProfilesDialog(QtWidgets.QDialog, FORM_CLASS):
                     edit.setText(path[0])
             button.clicked.connect(set_edit)
 
-        connect_file_button(self.training_scenes_button,
-                            self.training_scenes_edit.setText)
-        connect_file_button(self.training_labels_button,
-                            self.training_labels_edit)
-        connect_file_button(self.validation_scenes_button,
-                            self.validation_scenes_edit)
-        connect_file_button(self.validation_labels_button,
-                            self.validation_labels_edit)
-        connect_file_button(self.validation_predictions_button,
-                            self.validation_predictions_edit)
-        connect_file_button(self.prediction_scenes_button,
-                            self.prediction_scenes_edit)
-        connect_file_button(self.predictions_button,
-                            self.predictions_edit)
-
-    def show_info(self):
-        self.info_dialog.show()
-        self.info_dialog.exec_()
+        connect_file_button(self.image_sld_button,
+                            self.image_sld_edit)
+        connect_file_button(self.ground_truth_sld_button,
+                            self.ground_truth_sld_edit)
+        connect_file_button(self.prediction_sld_button,
+                            self.prediction_sld_edit)
+        connect_file_button(self.aoi_sld_button,
+                            self.aoi_sld_edit)
 
     def add_profile_clicked(self):
         # Run add profile dialog, set up new profile
@@ -109,25 +96,19 @@ class ProfilesDialogController(object):
     def update_ui_for_profile(self, i):
         profile = self.profiles[i]
 
-        self.dlg.training_scenes_edit.setText(profile.training_scenes_sld)
-        self.dlg.training_labels_edit.setText(profile.training_labels_sld)
-        self.dlg.validation_scenes_edit.setText(profile.validation_scenes_sld)
-        self.dlg.validation_labels_edit.setText(profile.validation_labels_sld)
-        self.dlg.validation_predictions_edit.setText(profile.validation_predictions_sld)
-        self.dlg.prediction_scenes_edit.setText(profile.prediction_scenes_sld)
-        self.dlg.predictions_edit.setText(profile.predictions_sld)
+        self.dlg.image_sld_edit.setText(profile.image_sld)
+        self.dlg.ground_truth_sld_edit.setText(profile.ground_truth_sld)
+        self.dlg.prediction_sld_edit.setText(profile.prediction_sld)
+        self.dlg.aoi_sld_edit.setText(profile.aoi_sld)
 
         self.current_profile_index = i
 
     def save_profile_changes(self, i):
         profile = self.profiles[i]
-        profile.training_scenes_sld = self.dlg.training_scenes_edit.text()
-        profile.training_labels_sld = self.dlg.training_labels_edit.text()
-        profile.validation_scenes_sld = self.dlg.validation_scenes_edit.text()
-        profile.validation_labels_sld = self.dlg.validation_labels_edit.text()
-        profile.validation_predictions_sld = self.dlg.validation_predictions_edit.text()
-        profile.prediction_scenes_sld = self.dlg.prediction_scenes_edit.text()
-        profile.predictions_sld = self.dlg.predictions_edit.text()
+        profile.image_sld = self.dlg.image_sld_edit.text()
+        profile.ground_truth_sld = self.dlg.ground_truth_sld_edit.text()
+        profile.prediction_sld = self.dlg.prediction_sld_edit.text()
+        profile.aoi_sld = self.dlg.aoi_sld_edit.text()
 
         self.profiles[i] = profile
 

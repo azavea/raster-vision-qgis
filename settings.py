@@ -14,36 +14,37 @@ class InfoUrls:
 
 class StyleProfile:
     def __init__(self,
-                 name, training_scenes_sld = "", training_labels_sld = "",
-                 validation_scenes_sld = "", validation_labels_sld = "", validation_predictions_sld = "",
-                 prediction_scenes_sld = "", predictions_sld = ""):
+                 name,
+                 image_sld = "",
+                 ground_truth_sld = "",
+                 prediction_sld = "",
+                 aoi_sld = ""):
         self.name = name
-        self.training_scenes_sld = training_scenes_sld
-        self.training_labels_sld = training_labels_sld
-        self.validation_scenes_sld = validation_scenes_sld
-        self.validation_labels_sld = validation_labels_sld
-        self.validation_predictions_sld = validation_predictions_sld
-        self.prediction_scenes_sld = prediction_scenes_sld
-        self.predictions_sld = predictions_sld
+        self.image_sld = image_sld
+        self.ground_truth_sld = ground_truth_sld
+        self.prediction_sld = prediction_sld
+        self.aoi_sld = aoi_sld
 
     def to_json_str(self):
         return json.dumps({ 'name': self.name,
-                            'training_scenes_sld': self.training_scenes_sld,
-                            'training_labels_sld': self.training_labels_sld,
-                            'validation_scenes_sld': self.validation_scenes_sld,
-                            'validation_labels_sld': self.validation_labels_sld,
-                            'validation_predictions_sld': self.validation_predictions_sld,
-                            'prediction_scenes_sld': self.prediction_scenes_sld,
-                            'predictions_sld': self.predictions_sld })
+                            'image_sld': self.image_sld,
+                            'ground_truth_sld': self.ground_truth_sld,
+                            'prediction_sld': self.prediction_sld,
+                            'aoi_sld': self.aoi_sld })
 
 
     @classmethod
     def from_json_str(cls, json_str):
         js = json.loads(json_str)
-        return StyleProfile(js['name'], js['training_scenes_sld'],
-                            js['training_labels_sld'], js['validation_scenes_sld'],
-                            js['validation_labels_sld'], js['validation_predictions_sld'],
-                            js['prediction_scenes_sld'], js['predictions_sld'])
+        name = js['name']
+        try:
+            return StyleProfile(name,
+                                js['image_sld'],
+                                js['ground_truth_sld'],
+                                js['prediction_sld'],
+                                js['aoi_sld'])
+        except KeyError:
+            return StyleProfile(name)
 
     @classmethod
     def EMPTY(cls):
@@ -64,19 +65,12 @@ class Settings(object):
 
     ### Load Experiment
 
-    # Raster Vision Root
-    def get_rv_root(self):
-        return self.settings.value("experiment/rv_root", "")
+    # Experiment config URI
+    def get_experiment_uri(self):
+        return self.settings.value("experiment/experiment_uri", "")
 
-    def set_rv_root(self, v):
-        self.settings.setValue("experiment/rv_root", v)
-
-    # Workflow URI
-    def get_workflow_uri(self):
-        return self.settings.value("experiment/workflow_uri", "")
-
-    def set_workflow_uri(self, v):
-        self.settings.setValue("experiment/workflow_uri", v)
+    def set_experiment_uri(self, v):
+        self.settings.setValue("experiment/experiment_uri", v)
 
     # Experiment style profile
     def get_experiment_profile(self):
