@@ -10,11 +10,11 @@
 name=Raster Vision
 qgisMinimumVersion=3.0
 description=Work with Raster Vision data in QGIS
-version=0.1
+version=0.8
 author=Azavea
 email=rdemanuele@gmail.com
 
-about=The Raster Vision QGIS plugin allows users to visualize output data from deep learning experiments run by Raster Vision.
+about=The Raster Vision QGIS plugin allows users to visualize experiment files and make predictions using deep learning models created by Raster Vision. Requires the 'rastervision' package, which can be found on pypi.
 
 tracker=https://github.com/azavea/raster-vision-qgis/issues
 repository=https://github.com/azavea/raster-vision-qgis
@@ -32,7 +32,7 @@ homepage=https://github.com/azavea/raster-vision-qgis
 category=Plugins
 icon=icon.png
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False

@@ -58,7 +58,7 @@ Link the repo directory into your QGIS plugin directory. I use the [Plugin Reloa
 
 e.g., on Mac OSX:
 ```
-ln -s `pwd`/raster-vision-qgis  /Users/rob/Library/Application\ Support/QGIS/QGIS3/profiles/default/python/plugins/
+ln -s `pwd`/rastervision_qgis  /Users/rob/Library/Application\ Support/QGIS/QGIS3/profiles/default/python/plugins/
 ```
 
 I'm using QT Creator to design the dialog UIs. Just drag over the `*.ui` files into QT Creator and it should open up the design component, where you can move things around, add controls, rename items, etc.
