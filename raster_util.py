@@ -16,7 +16,7 @@ def export_raster_layer(layer, path):
         provider.xSize(),
         provider.ySize(),
         provider.extent(),
-        raster.crs())
+        provider.crs())
 
 def get_raster_layers():
     project = QgsProject.instance()

@@ -3,8 +3,6 @@ import json
 
 from PyQt5.QtCore import QSettings
 
-from .viz_workflow import ExperimentLoadOptions
-
 class InfoUrls:
     def __init__(self):
         self.experiment = "http://github.com/azavea/raster-vision"
@@ -92,12 +90,12 @@ class Settings(object):
 
     ### Predict
 
-    # Raster Vision Model File
-    def get_model_file(self):
-        return self.settings.value("predict/model_file", "")
+    # Raster Vision Predict Package URI
+    def get_predict_package(self):
+        return self.settings.value("predict/predict_package", "")
 
-    def set_model_file(self, v):
-        self.settings.setValue("predict/model_file", v)
+    def set_predict_package(self, v):
+        self.settings.setValue("predict/predict_package", v)
 
     # Predict style profile
     def get_predict_profile(self):
@@ -105,6 +103,27 @@ class Settings(object):
 
     def set_predict_profile(self, v):
         self.settings.setValue('predict/profile', v)
+
+    # Label Store URI
+    def get_label_store_uri(self):
+        return self.settings.value('predict/label_store_uri', '')
+
+    def set_label_store_uri(self, v):
+        self.settings.setValue('predict/label_store_uri', v)
+
+    # Predict using docker
+    def get_use_docker(self):
+        return self.settings.value('predict/use_docker', False, bool)
+
+    def set_use_docker(self, v):
+        self.settings.setValue('predict/use_docker', v)
+
+    # Predict docker image
+    def get_docker_image(self):
+        return self.settings.value('predict/docker_image', '')
+
+    def set_docker_image(self, v):
+        self.settings.setValue('predict/docker_image', v)
 
     ### Style Profiles
 
@@ -130,10 +149,3 @@ class Settings(object):
 
     def set_working_dir(self, v):
         self.settings.setValue("config/working_dir", v)
-
-    # AWS Profile
-    def get_aws_profile(self):
-        return self.settings.value("config/aws_profile", None)
-
-    def set_aws_profile(self, v):
-        self.settings.setValue("config/aws_profile", v)

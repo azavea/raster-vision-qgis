@@ -19,7 +19,6 @@ from PyQt5.QtWidgets import QTableWidgetItem
 from qgis.core import Qgis
 
 from .settings import Settings, StyleProfile
-# from .viz_workflow import VizWorkflow, ExperimentLoadOptions
 from .experiment_loader import (ExperimentLoader,
                                 ExperimentLoadOptions,
                                 SceneLoadOptions,
@@ -28,6 +27,7 @@ from .log import Log
 
 import rastervision as rv
 from rastervision.utils.files import load_json_config
+from rastervision.filesystem import NotReadableError
 from rastervision.protos.experiment_pb2 import ExperimentConfig as ExperimentConfigMsg
 from rastervision.filesystem.s3_filesystem import S3FileSystem
 
@@ -88,10 +88,15 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
     def load_experiment_clicked(self):
         experiment_uri = self.experiment_uri_line_edit.text()
         Log.log_info("Loading experiment at {}".format(experiment_uri))
-        msg = load_json_config(experiment_uri, ExperimentConfigMsg())
+        try:
+            msg = load_json_config(experiment_uri, ExperimentConfigMsg())
+        except NotReadableError:
+            return
+
         experiment = rv.ExperimentConfig.from_proto(msg)
         ds = experiment.dataset
 
+        self.train_scene_list.clear()
         for scene in ds.train_scenes:
             item = QtWidgets.QListWidgetItem(scene.id, self.train_scene_list)
             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
@@ -99,6 +104,7 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
             item.setCheckState(QtCore.Qt.Checked)
             self.train_scene_list.addItem(item)
 
+        self.validation_scene_list.clear()
         for scene in ds.validation_scenes:
             item = QtWidgets.QListWidgetItem(scene.id, self.validation_scene_list)
             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
@@ -106,6 +112,7 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
             item.setCheckState(QtCore.Qt.Checked)
             self.validation_scene_list.addItem(item)
 
+        self.test_scene_list.clear()
         for scene in ds.test_scenes:
             item = QtWidgets.QListWidgetItem(scene.id, self.test_scene_list)
             item.setFlags(QtCore.Qt.ItemIsUserCheckable |
@@ -140,15 +147,6 @@ class ExperimentDialogController(object):
             self.dlg.style_profile_combobox.setCurrentIndex(profile_names.index(settings_profile))
         else:
             self.dlg.style_profile_combobox.setCurrentIndex(0)
-
-        # options = settings.get_experiment_load_options()
-        # self.dlg.training_scenes_checkbox.setChecked(options.training_scenes)
-        # self.dlg.training_labels_checkbox.setChecked(options.training_labels)
-        # self.dlg.validation_scenes_checkbox.setChecked(options.validation_scenes)
-        # self.dlg.validation_labels_checkbox.setChecked(options.validation_labels)
-        # self.dlg.validation_predictions_checkbox.setChecked(options.validation_predictions)
-        # self.dlg.prediction_scenes_checkbox.setChecked(options.prediction_scenes)
-        # self.dlg.predictions_checkbox.setChecked(options.predictions)
 
         result = self.dlg.exec_()
 
@@ -208,15 +206,10 @@ class ExperimentDialogController(object):
                 test_scenes=test_scenes
             )
 
-            ctx = LoadContext(experiment=experiment,
+            ctx = LoadContext(task=experiment.task,
                               iface=self.iface,
                               style_profile=style_profile,
                               working_dir=settings.get_working_dir())
-
-            # Set AWS Profile if we have one
-            profile = settings.get_aws_profile()
-            if profile:
-                S3FileSystem.set_profile(profile)
 
             Log.log_info("{}".format(profile))
             errors = ExperimentLoader.load(experiment, opts, ctx)
@@ -224,8 +217,4 @@ class ExperimentDialogController(object):
             if errors:
                 msg = "Some Files Not Loaded. Check Logs for details."
                 widget = self.iface.messageBar().createMessage("Raster Vision", msg)
-                # button = QtWidgets.QPushButton(widget)
-                # button.setText("View Logs.")
-                # button.pressed.connect(self.showLogs)
-                # widget.layout().addWidget(button)
                 self.iface.messageBar().pushWidget(widget, Qgis.Warning)

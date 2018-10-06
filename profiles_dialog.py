@@ -17,7 +17,6 @@ from PyQt5 import QtWidgets
 
 from .settings import Settings, StyleProfile
 
-from .profiles_info_dialog import ProfilesInfoDialog
 from .profiles_add_dialog import  ProfilesAddDialog
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(

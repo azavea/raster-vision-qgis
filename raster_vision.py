@@ -62,7 +62,7 @@ class RasterVisionPlugin:
 
         # Create the dialog (after translation) and keep reference
         self.experiment_controller = ExperimentDialogController(self.iface)
-        self.predict_controller = PredictDialogController()
+        self.predict_controller = PredictDialogController(self.iface)
         self.profiles_controller = ProfilesDialogController()
         self.config_controller = ConfigDialogController()
 

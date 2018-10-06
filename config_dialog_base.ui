@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>136</height>
+    <width>458</width>
+    <height>104</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>100</y>
+     <x>280</x>
+     <y>70</y>
      <width>171</width>
      <height>32</height>
     </rect>
@@ -55,54 +55,14 @@
   <widget class="QPushButton" name="working_dir_file_select_button">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>322</x>
      <y>30</y>
-     <width>113</width>
+     <width>131</width>
      <height>32</height>
     </rect>
    </property>
    <property name="text">
-    <string>Select File</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>141</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>AWS Profile (optional):</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="aws_profile_edit">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>70</y>
-     <width>301</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="info_button">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>10</y>
-     <width>21</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset theme=":/plugins/raster_vision_qgis/info.png">
-     <normaloff>.</normaloff>.</iconset>
+    <string>Select Directory</string>
    </property>
   </widget>
  </widget>

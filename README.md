@@ -38,6 +38,14 @@ The best way to do this is to styl each of the types of layers you want after fi
 
 Configure the plugin with a working directory and an AWS profile (option, it will use your default profile if none is specified).  If the files live on S3, this plugin will download files as necessary to your local working directory. If the file already exists in the working directory, the plugin will check the timestamps and overwrite the local file if the file on S3 is newer.
 
+### Using with AWS
+
+You'll need to set your AWS_PROFILE in the QGIS environment if you're not using the defaul profile.
+
+### Using with docker
+
+To run predict through docker, make sure that the docker command is on the `PATH` environment variable used  by docker.
+
 ## Tutorial: View SpaceNet Building Chip Classification
 
 TODO

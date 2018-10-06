@@ -58,7 +58,7 @@ class GeoJSONLoader:
         if sld:
             layer.loadSldStyle(sld)
         else:
-            class_map = ctx.experiment.task.class_map
+            class_map = ctx.task.class_map
             class_field = GeoJSONLoader._get_class_field(path)
             renderer = GeoJSONLoader._make_vector_renderer(layer, class_field, class_map)
             layer.setRenderer(renderer)

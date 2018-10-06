@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>114</height>
+    <width>580</width>
+    <height>203</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,9 +19,9 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>80</y>
-     <width>341</width>
+     <x>400</x>
+     <y>160</y>
+     <width>171</width>
      <height>32</height>
     </rect>
    </property>
@@ -35,22 +35,22 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>9</x>
+     <x>10</x>
      <y>10</y>
-     <width>151</width>
+     <width>121</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Raster Vision Model File:</string>
+    <string>Prediction Package:</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="model_file_edit">
+  <widget class="QLineEdit" name="predict_package_edit">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>140</x>
      <y>10</y>
-     <width>451</width>
+     <width>431</width>
      <height>21</height>
     </rect>
    </property>
@@ -58,7 +58,7 @@
   <widget class="QComboBox" name="style_profile_combobox">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>140</x>
      <y>70</y>
      <width>171</width>
      <height>26</height>
@@ -68,37 +68,23 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>10</x>
      <y>70</y>
-     <width>81</width>
-     <height>26</height>
+     <width>121</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
     <string>Style Profile:</string>
    </property>
-  </widget>
-  <widget class="QPushButton" name="info_button">
-   <property name="geometry">
-    <rect>
-     <x>640</x>
-     <y>10</y>
-     <width>21</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="icon">
-    <iconset theme=":/plugins/raster_vision_qgis/info.png">
-     <normaloff>.</normaloff>.</iconset>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QComboBox" name="input_layer_combobox">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>140</x>
      <y>40</y>
      <width>171</width>
      <height>26</height>
@@ -108,14 +94,82 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>10</x>
      <y>40</y>
-     <width>71</width>
-     <height>26</height>
+     <width>121</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
     <string>Input Layer:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Docker Image:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="use_docker_checkbox">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>140</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Use  Docker</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="docker_image_edit">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>160</y>
+     <width>171</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>100</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Output:</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="label_uri_edit">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>100</y>
+     <width>431</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>

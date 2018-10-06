@@ -11,8 +11,8 @@ from .raster_util import get_raster_layers
 from .label_loader import GeoJSONLoader
 
 class LoadContext:
-    def __init__(self, experiment, iface, style_profile, working_dir):
-        self.experiment = experiment
+    def __init__(self, task, iface, style_profile, working_dir):
+        self.task = task
         self.iface = iface
         self.style_profile = style_profile
         self.working_dir = working_dir
