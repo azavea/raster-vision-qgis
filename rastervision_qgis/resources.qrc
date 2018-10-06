@@ -4,6 +4,5 @@
         <file>icon-predict.png</file>
         <file>icon-profiles.png</file>
         <file>icon-configure.png</file>
-        <file>info.png</file>
     </qresource>
 </RCC>

@@ -43,7 +43,7 @@ class TestInit(unittest.TestCase):
             'author']
 
         file_path = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), os.pardir,
+            os.path.dirname(__file__), os.pardir, 'rastervision_qgis',
             'metadata.txt'))
         LOGGER.info(file_path)
         metadata = []

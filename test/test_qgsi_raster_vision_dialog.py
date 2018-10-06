@@ -16,7 +16,7 @@ import unittest
 
 from PyQt5.QtGui import QDialogButtonBox, QDialog
 
-from qgsi_raster_vision_dialog import RasterVisionDialog
+from rastervision_qgis.config_dialog import ConfigDialog
 
 from utilities import get_qgis_app
 QGIS_APP = get_qgis_app()
@@ -52,4 +52,3 @@ if __name__ == "__main__":
     suite = unittest.makeSuite(RasterVisionDialogTest)
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(suite)
-

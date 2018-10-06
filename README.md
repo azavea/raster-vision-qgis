@@ -66,5 +66,5 @@ I'm using QT Creator to design the dialog UIs. Just drag over the `*.ui` files i
 To compile the resources, run
 
 ```
-pyrcc5 -o resources.py resources.qrc
+pyrcc5 -o rastervision_qgis/resources.py rastervision_qgis/resources.qrc
 ```
