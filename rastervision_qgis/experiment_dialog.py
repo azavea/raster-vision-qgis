@@ -14,7 +14,6 @@ import os
 
 from PyQt5 import uic
 from PyQt5 import (QtWidgets, QtCore)
-from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5.QtCore import Qt
 
 from qgis.core import Qgis
@@ -70,21 +69,6 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
             .clicked \
             .connect(select_all(self.test_scenes_all_checkbox.checkState,
                                 self.test_scene_list))
-
-    def set_list_items(self, scene_ids):
-        table.clear()
-        table.setRowCount(len(rows))
-        for i, row in enumerate(rows):
-            for j, column in enumerate(row):
-                if column == 'x':
-                    item = QTableWidgetItem()
-                    item.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                else:
-                    item = QTableWidgetItem(column)
-
-                item.setTextAlignment(QtCore.Qt.AlignHCenter)
-                table.setItem(i, j, item)
 
     def load_experiment_clicked(self):
         experiment_uri = self.experiment_uri_line_edit.text()
