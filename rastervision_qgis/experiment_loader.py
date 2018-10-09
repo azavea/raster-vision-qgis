@@ -72,18 +72,16 @@ class ExperimentLoader:
     def zoom_to_layer(ctx):
         image_layers =  list(get_raster_layers().values())
         if image_layers:
-            layer = image_layers[0]
-            canvas = ctx.iface.mapCanvas()
-            extent = layer.extent()
-            canvas.setExtent(extent)
+            layer = image_layers[-1]
+            ctx.iface.setActiveLayer(layer)
+            ctx.iface.zoomToActiveLayer()
         else:
             project = QgsProject.instance()
             layers = list(project.mapLayers().values())
             if layers:
-                layer = layers[0]
-                canvas = ctx.iface.mapCanvas()
-                extent = layer.extent()
-                canvas.setExtent(extent)
+                layer = layers[-1]
+                ctx.iface.setActiveLayer(layer)
+                ctx.iface.zoomToActiveLayer()
 
     @staticmethod
     def load_scene(layer_prefix, scene, opts, ctx):
@@ -132,8 +130,6 @@ class ExperimentLoader:
             loader = RegistryInstance.get().get_evaluator_loader(evaluator.evaluator_type)
             if loader:
                 loader.load(evaluator, ctx)
-
-
 
         ExperimentLoader.zoom_to_layer(ctx)
         return False
