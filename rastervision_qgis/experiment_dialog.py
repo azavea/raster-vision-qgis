@@ -15,6 +15,7 @@ import os
 from PyQt5 import uic
 from PyQt5 import (QtWidgets, QtCore)
 from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtCore import Qt
 
 from qgis.core import Qgis
 
@@ -89,11 +90,14 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
         experiment_uri = self.experiment_uri_line_edit.text()
         Log.log_info("Loading experiment at {}".format(experiment_uri))
         try:
+            QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
             msg = load_json_config(experiment_uri, ExperimentConfigMsg())
+            QtWidgets.QApplication.restoreOverrideCursor()
         except NotReadableError:
             return
 
         experiment = rv.ExperimentConfig.from_proto(msg)
+        self.experiment = experiment
         ds = experiment.dataset
 
         self.train_scene_list.clear()
