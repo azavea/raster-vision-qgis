@@ -165,9 +165,7 @@ class ExperimentDialogController(object):
             if not style_profile_index == 0:
                 style_profile = profiles[style_profile_index]
 
-            msg = load_json_config(experiment_uri, ExperimentConfigMsg())
-            experiment = rv.ExperimentConfig.from_proto(msg)
-            Log.log_info("Loading experiment at {}".format(experiment_uri))
+            experiment = self.dlg.experiment
 
             load_image = self.dlg.images_checkbox.checkState()
             load_ground_truth = self.dlg.ground_truth_checkbox.checkState()
@@ -215,7 +213,6 @@ class ExperimentDialogController(object):
                               style_profile=style_profile,
                               working_dir=settings.get_working_dir())
 
-            Log.log_info("{}".format(profile))
             errors = ExperimentLoader.load(experiment, opts, ctx)
 
             if errors:
