@@ -14,9 +14,10 @@ import os
 
 from PyQt5 import uic
 from PyQt5 import (QtWidgets, QtCore)
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt
 
-from qgis.core import Qgis
+from qgis.core import (Qgis, QgsProject)
 
 from .settings import Settings, StyleProfile
 from .experiment_loader import (ExperimentLoader,
@@ -155,6 +156,18 @@ class ExperimentDialogController(object):
             load_ground_truth = self.dlg.ground_truth_checkbox.checkState()
             load_predictions = self.dlg.predictions_checkbox.checkState()
             load_aoi = self.dlg.aoi_checkbox.checkState()
+
+            # Check that we really want to clear the project if there
+            # are existing layers.
+            project = QgsProject.instance()
+            layers = list(project.mapLayers().values())
+
+            if len(layers) > 0:
+                reply = QMessageBox.question(self.iface.mainWindow(), 'Continue?',
+                                             ('There are existing layers that will be cleared '
+                                              'from this project. Continue?'), QMessageBox.Yes, QMessageBox.No)
+                if reply == QMessageBox.No:
+                    return
 
             train_scenes = []
             for n in range(0, self.dlg.train_scene_list.count()):
