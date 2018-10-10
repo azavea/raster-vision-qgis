@@ -3,7 +3,7 @@
 This plugin works with [Raster Vision](https://github.com/azavea/raster-vision) in QGIS
 to view experiment results and predict against imagery.
 
-See https://readthedocs.org/projects/raster-vision/qgis usage for documentation.
+See https://docs.rastervision.io/en/latest/qgis.html usage for documentation.
 
 See https://github.com/azavea/raster-vision-examples for examples of using the Raster Vision QGIS plugin in
 deep learning model building workflows.
