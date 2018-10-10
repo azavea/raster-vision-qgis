@@ -77,7 +77,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Image SLD:</string>
+     <string>Image:</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -96,7 +96,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Ground Truth Label SLD:</string>
+     <string>Ground Truth Label:</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -115,13 +115,13 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Prediction Label SLD:</string>
+     <string>Prediction Label:</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="image_sld_edit">
+   <widget class="QLineEdit" name="image_style_edit">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -131,7 +131,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="ground_truth_sld_edit">
+   <widget class="QLineEdit" name="ground_truth_style_edit">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -141,7 +141,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="prediction_sld_edit">
+   <widget class="QLineEdit" name="prediction_style_edit">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -151,7 +151,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QToolButton" name="image_sld_button">
+   <widget class="QToolButton" name="image_style_button">
     <property name="geometry">
      <rect>
       <x>560</x>
@@ -164,7 +164,7 @@
      <string>...</string>
     </property>
    </widget>
-   <widget class="QToolButton" name="ground_truth_sld_button">
+   <widget class="QToolButton" name="ground_truth_style_button">
     <property name="geometry">
      <rect>
       <x>560</x>
@@ -177,7 +177,7 @@
      <string>...</string>
     </property>
    </widget>
-   <widget class="QToolButton" name="prediction_sld_button">
+   <widget class="QToolButton" name="prediction_style_button">
     <property name="geometry">
      <rect>
       <x>560</x>
@@ -203,13 +203,13 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
-     <string>Labeled AOI SLD:</string>
+     <string>Labeled AOI:</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="aoi_sld_edit">
+   <widget class="QLineEdit" name="aoi_style_edit">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -219,7 +219,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QToolButton" name="aoi_sld_button">
+   <widget class="QToolButton" name="aoi_style_button">
     <property name="geometry">
      <rect>
       <x>560</x>

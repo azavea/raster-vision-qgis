@@ -1,6 +1,6 @@
 import rastervision as rv
 from .raster_source_loader import (GeoTiffSourceLoader, ImageSourceLoader)
-from .label_loader import (GeoJSONGroundTruthLoader, GeoJSONPredictionLoader)
+from .label_loader import (GeoJSONUriLoader, RasterGroundTruthLoader, RasterPredictionLoader)
 from .evaluator_loader import JsonEvaluatorLoader
 
 class RegistryError(Exception):
@@ -16,19 +16,22 @@ class Registry:
         self.raster_source_loaders = {
             # Raster Sources
             rv.GEOTIFF_SOURCE: GeoTiffSourceLoader,
-            rv.IMAGE_SOURCE: ImageSourceLoader
+            rv.IMAGE_SOURCE: ImageSourceLoader,
+            rv.GEOJSON_SOURCE: GeoJSONUriLoader
         }
 
         self.label_source_loaders = {
             # Label Sources
-            rv.OBJECT_DETECTION_GEOJSON: GeoJSONGroundTruthLoader,
-            rv.CHIP_CLASSIFICATION_GEOJSON: GeoJSONGroundTruthLoader
+            rv.OBJECT_DETECTION_GEOJSON: GeoJSONUriLoader,
+            rv.CHIP_CLASSIFICATION_GEOJSON: GeoJSONUriLoader,
+            rv.SEMANTIC_SEGMENTATION_RASTER: RasterGroundTruthLoader
         }
 
         self.label_store_loaders = {
             # Label Stores
-            rv.OBJECT_DETECTION_GEOJSON: GeoJSONPredictionLoader,
-            rv.CHIP_CLASSIFICATION_GEOJSON: GeoJSONPredictionLoader
+            rv.OBJECT_DETECTION_GEOJSON: GeoJSONUriLoader,
+            rv.CHIP_CLASSIFICATION_GEOJSON: GeoJSONUriLoader,
+            rv.SEMANTIC_SEGMENTATION_RASTER: RasterPredictionLoader
         }
 
         self.evaluator_loaders = {

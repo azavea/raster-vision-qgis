@@ -16,6 +16,7 @@ class LoadContext:
         self.iface = iface
         self.style_profile = style_profile
         self.working_dir = working_dir
+        self.registry = RegistryInstance.get()
 
 class SceneLoadOptions:
     def __init__(self,
@@ -57,9 +58,6 @@ class ExperimentLoadOptions:
         self.train_scenes = dict(map(lambda s: (s.scene_id, s), train_scenes))
         self.validation_scenes = dict(map(lambda s: (s.scene_id, s), validation_scenes))
         self.test_scenes = dict(map(lambda s: (s.scene_id, s), test_scenes))
-        Log.log_info("{}".format(train_scenes))
-        Log.log_info("{}".format(validation_scenes))
-        Log.log_info("{}".format(test_scenes))
 
 class ExperimentLoader:
     @staticmethod
@@ -88,23 +86,32 @@ class ExperimentLoader:
         layer_name = "{}{}".format(layer_prefix, scene.id)
         if opts.load_image:
             config = scene.raster_source
-            loader = RegistryInstance.get().get_raster_source_loader(config.source_type)
-            loader.load(config, layer_name, ctx)
+            loader = ctx.registry.get_raster_source_loader(config.source_type)
+            style_file = None
+            if ctx.style_profile and ctx.style_profile.image_style_file:
+                style_file = ctx.style_profile.image_style_file
+            loader.load(config, layer_name, ctx, style_file)
         if opts.load_ground_truth and scene.label_source:
             config = scene.label_source
-            loader = RegistryInstance.get().get_label_source_loader(config.source_type)
+            loader = ctx.registry.get_label_source_loader(config.source_type)
+            style_file = None
+            if ctx.style_profile:
+                style_file = ctx.style_profile.ground_truth_style_file
             gt_layer_name = "{}-ground_truth".format(layer_name)
-            loader.load(config, gt_layer_name, ctx)
+            loader.load(config, gt_layer_name, ctx, style_file)
         if opts.load_predictions and scene.label_store:
             config = scene.label_store
-            loader = RegistryInstance.get().get_label_store_loader(config.store_type)
-            prediction_layer_name = "{}-predictions".format(layer_name)
-            loader.load(config, prediction_layer_name, ctx)
-        if opts.load_aoi and scene.aoi_uri:
-            sld = None
+            loader = ctx.registry.get_label_store_loader(config.store_type)
+            style_file = None
             if ctx.style_profile:
-                sld = ctx.style_profile.aoi_sld
-            GeoJSONLoader.load(scene.aoi_uri, "{}-AOI".format(layer_name), ctx, sld)
+                style_file = ctx.style_profile.prediction_style_file
+            prediction_layer_name = "{}-predictions".format(layer_name)
+            loader.load(config, prediction_layer_name, ctx, style_file)
+        if opts.load_aoi and scene.aoi_uri:
+            style_file = None
+            if ctx.style_profile:
+                style_file = ctx.style_profile.aoi_style_file
+            GeoJSONLoader.load(scene.aoi_uri, "{}-AOI".format(layer_name), ctx, style_file)
 
     @staticmethod
     def load(experiment, options, ctx):
@@ -127,7 +134,7 @@ class ExperimentLoader:
 
         # Dump any evaluatoions into the log if they exist
         for evaluator in experiment.evaluators:
-            loader = RegistryInstance.get().get_evaluator_loader(evaluator.evaluator_type)
+            loader = ctx.registry.get_evaluator_loader(evaluator.evaluator_type)
             if loader:
                 loader.load(evaluator, ctx)
 

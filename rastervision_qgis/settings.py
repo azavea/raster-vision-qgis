@@ -13,22 +13,22 @@ class InfoUrls:
 class StyleProfile:
     def __init__(self,
                  name,
-                 image_sld = "",
-                 ground_truth_sld = "",
-                 prediction_sld = "",
-                 aoi_sld = ""):
+                 image_style_file = "",
+                 ground_truth_style_file = "",
+                 prediction_style_file = "",
+                 aoi_style_file = ""):
         self.name = name
-        self.image_sld = image_sld
-        self.ground_truth_sld = ground_truth_sld
-        self.prediction_sld = prediction_sld
-        self.aoi_sld = aoi_sld
+        self.image_style_file = image_style_file
+        self.ground_truth_style_file = ground_truth_style_file
+        self.prediction_style_file = prediction_style_file
+        self.aoi_style_file = aoi_style_file
 
     def to_json_str(self):
         return json.dumps({ 'name': self.name,
-                            'image_sld': self.image_sld,
-                            'ground_truth_sld': self.ground_truth_sld,
-                            'prediction_sld': self.prediction_sld,
-                            'aoi_sld': self.aoi_sld })
+                            'image_style_file': self.image_style_file,
+                            'ground_truth_style_file': self.ground_truth_style_file,
+                            'prediction_style_file': self.prediction_style_file,
+                            'aoi_style_file': self.aoi_style_file })
 
 
     @classmethod
@@ -37,10 +37,10 @@ class StyleProfile:
         name = js['name']
         try:
             return StyleProfile(name,
-                                js['image_sld'],
-                                js['ground_truth_sld'],
-                                js['prediction_sld'],
-                                js['aoi_sld'])
+                                js['image_style_file'],
+                                js['ground_truth_style_file'],
+                                js['prediction_style_file'],
+                                js['aoi_style_file'])
         except KeyError:
             return StyleProfile(name)
 
@@ -110,6 +110,13 @@ class Settings(object):
 
     def set_label_store_uri(self, v):
         self.settings.setValue('predict/label_store_uri', v)
+
+    # Update stats flag
+    def get_update_stats(self):
+        return self.settings.value('predict/update_stats', False, bool)
+
+    def set_update_stats(self, v):
+        self.settings.setValue('predict/update_stats', v)
 
     # Predict using docker
     def get_use_docker(self):

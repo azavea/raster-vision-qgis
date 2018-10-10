@@ -8,7 +8,6 @@ from qgis.core import (QgsSymbol,
 
 from .utils import get_local_path
 
-
 class GeoJSONLoader:
     @staticmethod
     def _get_class_field(labels_uri):
@@ -52,31 +51,44 @@ class GeoJSONLoader:
 
 
     @staticmethod
-    def load(uri, layer_name, ctx, sld=None):
+    def load(uri, layer_name, ctx, style_file=None):
         path = get_local_path(uri, ctx.working_dir)
         layer = ctx.iface.addVectorLayer(path, layer_name, 'ogr')
-        if sld:
-            layer.loadSldStyle(sld)
+        if style_file:
+            if style_file.endswith('.sld'):
+                layer.loadSldStyle(style_file)
+            else:
+                layer.loadNamedStyle(style_file)
         else:
             class_map = ctx.task.class_map
             class_field = GeoJSONLoader._get_class_field(path)
             renderer = GeoJSONLoader._make_vector_renderer(layer, class_field, class_map)
             layer.setRenderer(renderer)
-        return uri
 
 
-class GeoJSONGroundTruthLoader:
+class GeoJSONUriLoader:
     @staticmethod
-    def load(config, layer_name, ctx):
-        sld = None
-        if ctx.style_profile:
-            sld = ctx.style_profile.ground_truth_sld
-        return GeoJSONLoader.load(config.uri, layer_name, ctx, sld)
+    def load(config, layer_name, ctx, style_file=None):
+        GeoJSONLoader.load(config.uri, layer_name, ctx, style_file)
 
-class GeoJSONPredictionLoader:
+
+class RasterGroundTruthLoader:
     @staticmethod
-    def load(config, layer_name, ctx):
-        sld = None
-        if ctx.style_profile:
-            sld = ctx.style_profile.prediction_sld
-        return GeoJSONLoader.load(config.uri, layer_name, ctx, sld)
+    def load(config, layer_name, ctx, style_file=None):
+        loader = ctx.registry.get_raster_source_loader(config.source.source_type)
+        return loader.load(config.source, layer_name, ctx, style_file)
+
+
+class RasterPredictionLoader:
+    @staticmethod
+    def load(config, layer_name, ctx, style_file=None):
+        uri = config.uri
+        path = get_local_path(uri, ctx.working_dir)
+        layer = ctx.iface.addRasterLayer(path, layer_name)
+        if style_file:
+            if style_file.endswith('.sld'):
+                layer.loadSldStyle(style_file)
+            else:
+                layer.loadNamedStyle(style_file)
+
+        return layer

@@ -172,6 +172,19 @@
     </rect>
    </property>
   </widget>
+  <widget class="QCheckBox" name="update_stats_checkbox">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>40</y>
+     <width>101</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Update Stats</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>

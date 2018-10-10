@@ -30,6 +30,7 @@ import rastervision as rv
 from rastervision.utils.files import load_json_config
 from rastervision.filesystem import NotReadableError
 from rastervision.protos.experiment_pb2 import ExperimentConfig as ExperimentConfigMsg
+from rastervision.filesystem import ProtobufParseException
 from rastervision.filesystem.s3_filesystem import S3FileSystem
 
 
@@ -38,11 +39,13 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, iface, parent=None):
         """Constructor."""
 
         super(ExperimentDialog, self).__init__(parent)
         self.setupUi(self)
+
+        self.iface = iface
 
         self.load_button.clicked.connect(self.load_experiment_clicked)
 
@@ -74,12 +77,17 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
     def load_experiment_clicked(self):
         experiment_uri = self.experiment_uri_line_edit.text()
         Log.log_info("Loading experiment at {}".format(experiment_uri))
+        QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
         try:
-            QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
             msg = load_json_config(experiment_uri, ExperimentConfigMsg())
-            QtWidgets.QApplication.restoreOverrideCursor()
-        except NotReadableError:
+        except (NotReadableError, ProtobufParseException) as e:
+            reply = QMessageBox.warning(self.iface.mainWindow(), 'Error',
+                                        'Unable to read experiment file. See log more details.', QMessageBox.Ok)
+            Log.log_warning('Unable to read experiment file: {}'.format(experiment_uri))
+            Log.log_exception(e)
             return
+        finally:
+            QtWidgets.QApplication.restoreOverrideCursor()
 
         experiment = rv.ExperimentConfig.from_proto(msg)
         self.experiment = experiment
@@ -112,7 +120,7 @@ class ExperimentDialog(QtWidgets.QDialog, FORM_CLASS):
 
 class ExperimentDialogController(object):
     def __init__(self, iface):
-        self.dlg = ExperimentDialog()
+        self.dlg = ExperimentDialog(iface)
         self.iface = iface
 
     def showLogs(self):

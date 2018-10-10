@@ -40,14 +40,14 @@ class ProfilesDialog(QtWidgets.QDialog, FORM_CLASS):
                     edit.setText(path[0])
             button.clicked.connect(set_edit)
 
-        connect_file_button(self.image_sld_button,
-                            self.image_sld_edit)
-        connect_file_button(self.ground_truth_sld_button,
-                            self.ground_truth_sld_edit)
-        connect_file_button(self.prediction_sld_button,
-                            self.prediction_sld_edit)
-        connect_file_button(self.aoi_sld_button,
-                            self.aoi_sld_edit)
+        connect_file_button(self.image_style_button,
+                            self.image_style_edit)
+        connect_file_button(self.ground_truth_style_button,
+                            self.ground_truth_style_edit)
+        connect_file_button(self.prediction_style_button,
+                            self.prediction_style_edit)
+        connect_file_button(self.aoi_style_button,
+                            self.aoi_style_edit)
 
     def add_profile_clicked(self):
         # Run add profile dialog, set up new profile
@@ -95,19 +95,19 @@ class ProfilesDialogController(object):
     def update_ui_for_profile(self, i):
         profile = self.profiles[i]
 
-        self.dlg.image_sld_edit.setText(profile.image_sld)
-        self.dlg.ground_truth_sld_edit.setText(profile.ground_truth_sld)
-        self.dlg.prediction_sld_edit.setText(profile.prediction_sld)
-        self.dlg.aoi_sld_edit.setText(profile.aoi_sld)
+        self.dlg.image_style_edit.setText(profile.image_style_file)
+        self.dlg.ground_truth_style_edit.setText(profile.ground_truth_style_file)
+        self.dlg.prediction_style_edit.setText(profile.prediction_style_file)
+        self.dlg.aoi_style_edit.setText(profile.aoi_style_file)
 
         self.current_profile_index = i
 
     def save_profile_changes(self, i):
         profile = self.profiles[i]
-        profile.image_sld = self.dlg.image_sld_edit.text()
-        profile.ground_truth_sld = self.dlg.ground_truth_sld_edit.text()
-        profile.prediction_sld = self.dlg.prediction_sld_edit.text()
-        profile.aoi_sld = self.dlg.aoi_sld_edit.text()
+        profile.image_style_file = self.dlg.image_style_edit.text()
+        profile.ground_truth_style_file = self.dlg.ground_truth_style_edit.text()
+        profile.prediction_style_file = self.dlg.prediction_style_edit.text()
+        profile.aoi_style_file = self.dlg.aoi_style_edit.text()
 
         self.profiles[i] = profile
 

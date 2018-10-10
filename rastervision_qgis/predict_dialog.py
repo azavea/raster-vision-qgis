@@ -68,6 +68,8 @@ class PredictDialogController(object):
 
         self.dlg.label_uri_edit.setText(settings.get_label_store_uri())
 
+        self.dlg.update_stats_checkbox.setChecked(settings.get_update_stats())
+
         self.dlg.use_docker_checkbox.setChecked(settings.get_use_docker())
         self.dlg.docker_image_edit.setText(settings.get_docker_image())
 
@@ -98,6 +100,9 @@ class PredictDialogController(object):
 
             label_store_uri = self.dlg.label_uri_edit.text()
             settings.set_label_store_uri(label_store_uri)
+
+            update_stats = self.dlg.update_stats_checkbox.checkState()
+            settings.set_update_stats(update_stats)
 
             use_docker = self.dlg.use_docker_checkbox.checkState()
             settings.set_use_docker(use_docker)
@@ -136,6 +141,9 @@ class PredictDialogController(object):
                            '--export-config',
                            '/opt/source/{}'.format(bundle_config_base)]
 
+                    if update_stats:
+                        cmd.append('--update-stats')
+
                     Log.log_info('Running command: {}'.format(' '.join(cmd)))
                     try:
                         output = check_output(cmd)
@@ -145,7 +153,7 @@ class PredictDialogController(object):
                             ' '.join(cmd), e.output))
                         raise e
                 else:
-                    predictor = Predictor(pp_local, tmp_dir)
+                    predictor = Predictor(pp_local, tmp_dir, update_stats=update_stats)
                     predictor.predict(path, label_store_uri, bundle_config_path)
 
                 msg = load_json_config(bundle_config_path, CommandConfigMsg())
@@ -159,4 +167,7 @@ class PredictDialogController(object):
             config = label_store_config
             loader = RegistryInstance.get().get_label_store_loader(config.store_type)
             ctx = LoadContext(task_config, self.iface, style_profile, None)
-            loader.load(config, prediction_layer_name, ctx)
+            style_file = None
+            if ctx.style_profile:
+                style_file = ctx.style_profile.prediction_style_file
+            loader.load(config, prediction_layer_name, ctx, style_file)
