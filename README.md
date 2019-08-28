@@ -1,5 +1,7 @@
 # Raster Vision QGIS Plugin
 
+## ⚠️ Note: This project is no longer maintained as of RV 0.9
+
 This plugin works with [Raster Vision](https://github.com/azavea/raster-vision) in QGIS
 to view experiment results and predict against imagery.
 
